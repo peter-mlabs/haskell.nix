@@ -272,6 +272,10 @@ in {
                 # This one will lead to segv's on darwin, when calling `strlen` during lookupStrHashTable. `strlen` ends up being called with 0x0. Hence we can't use it on darwin just yet.
                 # This patch will allow adding additional symbols to iserv, instead of having to patch them into GHC all the time.
                 ++ final.lib.optional (versionAtLeast "9.6.1"  && versionLessThan"9.10" && (final.stdenv.targetPlatform != final.stdenv.hostPlatform) && (final.stdenv.targetPlatform.isAndroid || final.stdenv.targetPlatform.isLinux) && (final.stdenv.targetPlatform.isAarch64 || final.stdenv.targetPlatform.is32bit)) ./patches/ghc/iserv-syms.patch
+                # Allow loading static external plugins into cross compilers
+                ++ final.lib.optional (versionAtLeast "9.6.1"  && versionLessThan"9.10" && (final.stdenv.targetPlatform != final.stdenv.hostPlatform)) ./patches/ghc/5c80a27488acfe3610ddfcb99a1e961002e386d0.patch
+                ++ final.lib.optional (versionAtLeast "9.6.1"  && versionLessThan"9.10" && (final.stdenv.targetPlatform != final.stdenv.hostPlatform)) ./patches/ghc/f8beb54a1d5725bd0d8a4b0a909d1b41d742b50b.patch
+
                 ;
         in ({
             ghc865 = final.callPackage ../compiler/ghc (traceWarnOld "8.6" {
